@@ -11,17 +11,60 @@ import {
   PinInputField,
   useToast,
 } from "@chakra-ui/react";
-import { useShowDeleteModal } from "../store/store";
+import { useShowDeleteModal, useFileId } from "../store/store";
 import { useState } from "preact/hooks";
 
 export const ConfirmDelete = () => {
   const set = useShowDeleteModal((state) => state);
+  const file = useFileId((state) => state.file);
   const [pin, setPin] = useState("");
   const toast = useToast();
   const isOpen = set.show;
   function onClose() {
     set.setUnConfirm();
   }
+  function onFinish() {
+    fetch(
+      `https://street-team-image-upload.herokuapp.com/file?pin=${pin}&file_id=${file}`,
+      { method: "DELETE" }
+    )
+      .then(async (res) => {
+        const ponse = await res.json();
+        setPin("");
+        onStateCall(ponse);
+      })
+      .catch(() => {
+        toast({
+          title: "Server Error",
+          status: "error",
+          description: "Failed to Delete",
+          duration: 4000,
+          isClosable: true,
+        });
+      });
+  }
+
+  function onStateCall(delRes) {
+    if (delRes.status == true) {
+      toast({
+        title: "Response",
+        status: delRes.message,
+        description: "Deleted Successfully",
+        duration: 3000,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Response",
+        status: "error",
+        description: "Failed to Delete",
+        duration: 4000,
+        isClosable: true,
+      });
+    }
+    onClose();
+  }
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -35,9 +78,6 @@ export const ConfirmDelete = () => {
               focusBorderColor="orange.400"
               errorBorderColor="red.500"
               mask={true}
-              onComplete={(e) => {
-                setPin(e);
-              }}
               onChange={(e) => {
                 if (isNaN(Number(e))) {
                   toast({
@@ -47,6 +87,8 @@ export const ConfirmDelete = () => {
                     status: "error",
                     duration: 3000,
                   });
+                } else {
+                  setPin(e);
                 }
               }}
             >
@@ -58,11 +100,10 @@ export const ConfirmDelete = () => {
           </ModalBody>
 
           <ModalFooter>
-            <p>{pin}</p>
             <Button colorScheme="orange" mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button variant="solid" colorScheme="red">
+            <Button variant="solid" colorScheme="red" onClick={onFinish}>
               Delete
             </Button>
           </ModalFooter>

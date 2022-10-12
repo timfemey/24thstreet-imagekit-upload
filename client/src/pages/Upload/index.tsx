@@ -4,6 +4,7 @@ import {
   Input,
   Container,
   useToast,
+  Button,
 } from "@chakra-ui/react";
 
 export const Upload = () => {
@@ -11,7 +12,12 @@ export const Upload = () => {
   return (
     <>
       <Container marginTop="80" centerContent>
-        <FormControl as={"form"}>
+        <FormControl
+          as={"form"}
+          method="POST"
+          action={"https://street-team-image-upload.herokuapp.com/file"}
+          encType={"multipart/form-data"}
+        >
           <InputGroup>
             <Input
               onFocus={() => {
@@ -26,8 +32,15 @@ export const Upload = () => {
               }}
               border={"none"}
               type={"file"}
+              name="file"
+              accept="image/*"
               placeholder="Choose Image"
             />
+          </InputGroup>
+          <Input name="name" placeholder="Name" />
+          <Input name="pin" placeholder="PIN" />
+          <InputGroup>
+            <Input type={"submit"} value="Upload" />
           </InputGroup>
         </FormControl>
       </Container>

@@ -1,49 +1,52 @@
-import { Image, CircularProgress, WrapItem, Center } from "@chakra-ui/react";
-import { AiOutlineDownload, AiOutlineDelete } from "react-icons/ai";
+import { Image, CircularProgress, Center } from "@chakra-ui/react";
 import { ReactElement } from "react";
-import { useShowDeleteModal } from "../store/store";
+import { AiOutlineDelete } from "react-icons/ai";
+import { useFileId, useShowDeleteModal } from "../store/store";
 
 interface Props {
   src: string;
   i: number;
   alt: string;
+  fileid: string;
+  name: string;
 }
 
 export const ImageComp = (props: Props) => {
-  const { src, i, alt } = props;
+  const { src, i, alt, fileid } = props;
 
   const set = useShowDeleteModal((state) => state);
-  function showConfirmDeleteModal() {
+  const file = useFileId((state) => state);
+  function showConfirmDeleteModal(e: any) {
+    file.setId(e.currentTarget.className);
     set.setConfirm();
   }
 
   return (
     <>
-      <WrapItem>
-        <Center>
-          <Image
-            key={i}
-            loading={i > 3 ? "lazy" : "eager"}
-            fallback={
-              (
-                <CircularProgress isIndeterminate color="orange.300" />
-              ) as ReactElement<any>
-            }
-            boxSize="min"
-            objectFit="contain"
-            src={src}
-            alt={alt}
-          />
+      <Center>
+        <Image
+          key={i}
+          loading={i > 3 ? "lazy" : "eager"}
+          fallback={
+            (
+              <CircularProgress isIndeterminate color="orange.300" />
+            ) as ReactElement<any>
+          }
+          boxSize="min"
+          objectFit="contain"
+          src={src}
+          alt={alt}
+        />
 
-          <h2 style={{ fontSize: "2rem" }}>
-            <AiOutlineDownload />
-          </h2>
-          <h2 style={{ fontSize: "2rem" }} onClick={showConfirmDeleteModal}>
-            {" "}
-            <AiOutlineDelete />
-          </h2>
-        </Center>
-      </WrapItem>
+        <h2
+          style={{ fontSize: "2rem" }}
+          className={fileid}
+          onClick={showConfirmDeleteModal}
+        >
+          {" "}
+          <AiOutlineDelete />
+        </h2>
+      </Center>
     </>
   );
 };

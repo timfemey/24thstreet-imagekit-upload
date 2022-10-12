@@ -1,30 +1,51 @@
-import { Container, Wrap } from "@chakra-ui/react";
+import { Container, Box } from "@chakra-ui/react";
 
-import { useState } from "preact/hooks";
+import { useState, useEffect } from "preact/hooks";
 import { ImageComp } from "../../components/Image";
 
 //@ts-ignore
 import { ConfirmDelete } from "../../components/ConfirmDelete";
 
 export const Images = () => {
-  const [data, setData] = useState([
-    1, 2, 3, 4, 13, 23, 30, 10, 12, 19, 18, 15, 16, 7,
-  ]);
+  const [data, setData] = useState<any[]>([]);
+
+  useEffect(() => {
+    const aborter = new AbortController();
+    fetch("https://street-team-image-upload.herokuapp.com/file", {
+      method: "GET",
+      signal: aborter.signal,
+    }).then(async (res) => {
+      const ponse = (await res.json()).data.data;
+
+      setData([...ponse]);
+    });
+    return () => {
+      aborter.abort();
+    };
+  }, []);
+
   return (
     <>
       {/* direction={["column", "row"]} align="baseline" maxWidth={"100%"} */}
       <Container marginTop="36" centerContent>
-        <Wrap>
-          {data.map((val, i) => {
-            return (
-              <ImageComp
-                src="https://bit.ly/dan-abramov"
-                i={i}
-                alt="Image Alt"
-              />
-            );
-          })}{" "}
-        </Wrap>
+        {data.map((val, i) => {
+          return (
+            <>
+              <Box maxW="md">
+                <ImageComp
+                  src={val.url}
+                  fileid={val.fileId}
+                  name={val.name}
+                  i={i}
+                  alt={val.name}
+                />
+              </Box>
+              <br />
+              <br />
+              <br />
+            </>
+          );
+        })}{" "}
         <ConfirmDelete />
       </Container>
     </>
