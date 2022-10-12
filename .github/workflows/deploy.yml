@@ -21,6 +21,7 @@ jobs:
         with:
           version: 7.9.5
           run_install: false
+      - run: pnpm install -g typescript
       - run: pnpm install
       - run: pnpm run build
       - uses: w9jds/firebase-action@master
