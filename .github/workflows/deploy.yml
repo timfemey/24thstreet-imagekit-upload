@@ -1,0 +1,30 @@
+name: Deploy Waitlist Landing Page
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@master
+        with:
+          node-version: 17
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7.9.5
+          run_install: false
+      - run: pnpm install
+      - run: pnpm run build
+      - uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting:street-waitlist
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
