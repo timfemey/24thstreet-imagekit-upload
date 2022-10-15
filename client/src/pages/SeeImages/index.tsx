@@ -27,11 +27,18 @@ export const Images = () => {
   return (
     <>
       {/* direction={["column", "row"]} align="baseline" maxWidth={"100%"} */}
-      <Container marginTop="36" centerContent>
+      <Container
+        mt="5rem"
+        centerContent
+        border="1px solid black"
+        w="90%"
+        mx="auto"
+        maxW="50rem"
+      >
         {data.map((val, i) => {
           return (
             <>
-              <Box maxW="md">
+              <Box paddingX={5} mb="3rem">
                 <ImageComp
                   src={val.url}
                   fileid={val.fileId}
@@ -40,9 +47,6 @@ export const Images = () => {
                   alt={val.name}
                 />
               </Box>
-              <br />
-              <br />
-              <br />
             </>
           );
         })}{" "}
