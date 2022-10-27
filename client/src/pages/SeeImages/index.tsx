@@ -5,12 +5,15 @@ import { ImageComp } from "../../components/Image";
 
 //@ts-ignore
 import { ConfirmDelete } from "../../components/ConfirmDelete";
+import Loading from "../../components/Loading";
 
 export const Images = () => {
   const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const aborter = new AbortController();
+    setLoading(true);
     fetch("https://street-team-image-upload.herokuapp.com/file", {
       method: "GET",
       signal: aborter.signal,
@@ -18,20 +21,23 @@ export const Images = () => {
       const ponse = (await res.json()).data.data;
 
       setData([...ponse]);
+      setLoading(false);
     });
     return () => {
       aborter.abort();
     };
   }, []);
 
+  if (loading) return <Loading />;
+
   return (
     <>
       {/* direction={["column", "row"]} align="baseline" maxWidth={"100%"} */}
-      <Container marginTop="36" centerContent>
+      <Container mt="5rem" centerContent w="90%" mx="auto" maxW="50rem">
         {data.map((val, i) => {
           return (
             <>
-              <Box maxW="md">
+              <Box paddingX={5} mb="3rem">
                 <ImageComp
                   src={val.url}
                   fileid={val.fileId}
@@ -40,12 +46,9 @@ export const Images = () => {
                   alt={val.name}
                 />
               </Box>
-              <br />
-              <br />
-              <br />
             </>
           );
-        })}{" "}
+        })}
         <ConfirmDelete />
       </Container>
     </>

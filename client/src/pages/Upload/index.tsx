@@ -11,7 +11,14 @@ export const Upload = () => {
   const toast = useToast();
   return (
     <>
-      <Container marginTop="80" centerContent>
+      <Container
+        marginTop="50"
+        padding={10}
+        centerContent
+        width="90%"
+        maxWidth="517px"
+        marginX="auto"
+      >
         <FormControl
           as={"form"}
           method="POST"
@@ -35,12 +42,19 @@ export const Upload = () => {
               name="file"
               accept="image/*"
               placeholder="Choose Image"
+              mb={5}
             />
           </InputGroup>
-          <Input name="name" placeholder="Name" />
-          <Input name="pin" placeholder="PIN" />
+          <Input name="name" placeholder="Name" mb={5} />
+          <Input name="pin" placeholder="PIN" mb={5} />
           <InputGroup>
-            <Input type={"submit"} value="Upload" />
+            <Input
+              type={"submit"}
+              value="Upload"
+              bg="teal"
+              color="white"
+              fontWeight={700}
+            />
           </InputGroup>
         </FormControl>
       </Container>
