@@ -9,19 +9,21 @@ import (
 	"github.com/imagekit-developer/imagekit-go/api/media"
 )
 
-func SeeImages() ([]media.File, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	privateKey := config.EnvPrivateAPISecret()
-	publicKey := config.EnvPublicAPIKey()
-	urlEndpoint := config.EnvURL()
+	var privateKey = config.EnvPrivateAPISecret()
+	var publicKey = config.EnvPublicAPIKey()
+	var urlEndpoint = config.EnvURL()
 
 	//Initialize ImageKit Instance and Pass environment variables
-	ik := ImageKit.NewFromParams(ImageKit.NewParams{
+	var ik = ImageKit.NewFromParams(ImageKit.NewParams{
 		PrivateKey:  privateKey,
 		PublicKey:   publicKey,
 		UrlEndpoint: urlEndpoint,
 	})
+
+func SeeImages() ([]media.File, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 
 	resp, err := ik.Media.Files(ctx, media.FilesParam{
 		Skip:        0,
