@@ -25,8 +25,8 @@ func SeeImages() ([]media.File, error) {
 
 	resp, err := ik.Media.Files(ctx, media.FilesParam{
 		Skip:        0,
-		Limit:       15,
-		SearchQuery: "createdAt >= \"7d\" AND size < \"4mb\"",
+		Limit:       35,
+		
 	})
 	if err != nil {
 		return nil, err
